@@ -1,0 +1,171 @@
+=============================================================================	
+#命令行编辑器sed(流编辑器)
+*-n	:将script命令添加到自己的命令中
+*-f	:将文件已有的命令添加到已有的命令中
+*-e :有多条命令
+
+[root@VM_0_16_centos shell]# echo "hello word" | sed "s/word/wuman/" 
+hello wuman
+
+=============================================================================	
+#sed默认情况下指会替换每一行的第一个出现的字符
+[root@localhost shell]# sed 's/o/w/' date1.txt 
+hellw1 word1
+hellw2 word2
+hellw3 word3
+hellw4 word4            
+hellw5 word5
+hellw6 word6
+hellw7 word7
+=============================================================================
+#-g:只要出现过的地方就替换
+[root@localhost shell]# sed 's/o/w/g' date1.txt 
+hellw1 wwrd1
+hellw2 wwrd2
+hellw3 wwrd3
+hellw4 wwrd4            
+hellw5 wwrd5
+hellw6 wwrd6
+hellw7 wwrd7
+=============================================================================
+#sed数字替换第个匹配的
+[root@localhost shell]# sed 's/o/w/2' date1.txt
+hello1 wwrd1
+hello2 wwrd2
+hello3 wwrd3
+hello4 wwrd4            
+hello5 wwrd5
+hello6 wwrd6
+hello7 wwrd7
+=============================================================================
+#sed从第几行开始匹配
+[root@localhost shell]# sed '2s/o/w/g' date1.txt
+hello1 word1
+hellw2 wwrd2
+hello3 word3
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed替换的区间
+[root@localhost shell]# sed '2,4s/o/w/g' date1.txt
+hello1 word1
+hellw2 wwrd2
+hellw3 wwrd3
+hellw4 wwrd4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed从第几行到结束
+[root@localhost shell]# sed '2,$s/o/w/g' date1.txt
+hello1 word1
+hellw2 wwrd2
+hellw3 wwrd3
+hellw4 wwrd4            
+hellw5 wwrd5
+hellw6 wwrd6
+hellw7 wwrd7
+=============================================================================
+#sed的多行命令(只替换第二行的数据)
+[root@localhost shell]# sed '2{
+> s/h/1/g
+> s/o/w/g}' date1.txt
+
+hello1 word1
+1ellw2 wwrd2
+hello3 word3
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed的删除命令(删除第三行的)
+[root@localhost shell]# sed '3d' date1.txt
+hello1 word1
+hello2 word2
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed的删除命令(删除匹配到的开始字符，匹配到的结束字符)
+[root@localhost shell]# sed '/1/, /4/d' date1.txt 
+hello5 word5
+hello6 word6
+hello7 word7
+###注意###删除的只不过是配配到的单词，如果没有找结束的就会将文本全部删除###
+=============================================================================
+#sed插入命令
+*-i:在头部添加
+*-a:在尾部添加
+[root@localhost shell]# echo "this is 1" | sed 'i\this is 2'
+this is 2
+this is 1
+
+[root@localhost shell]# echo "this is 1" | sed 'a\this is 2'
+this is 1
+this is 2
+=============================================================================
+sed插入命令(插入到第3行,i上面)
+[root@localhost shell]# sed '3i\this is instarll 1' date1.txt
+hello1 word1
+hello2 word2
+this is instarll 1
+hello3 word3
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed修改行数据(修改3行数据)
+[root@localhost shell]# sed '3c\this is instarll 1' date1.txt
+hello1 word1
+hello2 word2
+this is instarll 1
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed转换命令(将123装换成789)
+[root@localhost shell]# sed 'y/123/789/' date1.txt 
+hello7 word7
+hello8 word8
+hello9 word9
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+=============================================================================
+#sed处理文本
+*-w:写入文件
+*-r:读取文件
+
+#将date1.txt里面的1~2行内容写入到date2.txt中
+[root@localhost shell]# sed '1,2w date2.txt' date1.txt
+hello1 word1
+hello2 word2
+hello3 word3
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
+
+[root@localhost shell]# cat date2.txt 
+hello1 word1
+hello2 word2
+
+=============================================================================
+#读取文件(将date3.txt的内容输出到date1.txt内容第三行中去)
+[root@localhost shell]# sed '3r date3.txt' date1.txt
+hello1 word1
+hello2 word2
+hello3 word3
+this is 1
+this is 2
+hello4 word4            
+hello5 word5
+hello6 word6
+hello7 word7
